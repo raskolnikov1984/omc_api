@@ -21,6 +21,8 @@ API para captura de leads.
 | `PATCH` | `/api/v1/leads/{id}` | Actualizar lead existente |
 | `DELETE` | `/api/v1/leads/{id}` | Eliminar lead |
 | `GET` | `/api/v1/leads` | Listar leads con paginación |
+| `GET` | `/api/v1/leads/stats` | Estadísticas de leads |
+| `GET` | `/api/v1/health` | Health check |
 
 ### Parámetros de Query (GET /api/v1/leads)
 
@@ -58,3 +60,18 @@ POSTGRES_HOST=db
 |----------|--------|
 | API | 8010 |
 | PostgreSQL | 5432 |
+| Nginx | 10000 |
+
+## Tareas Disponibles
+
+Este proyecto usa [taskipy](https://taskipy.readthedocs.io/) para automatizar tareas comunes.
+
+| Comando | Descripción |
+|---------|-------------|
+| `task test` | Ejecutar tests |
+| `task lint` | Validar linter (ruff) |
+| `task docker-up` | Iniciar servicios con Docker Compose |
+| `task docker-down` | Detener servicios |
+| `task migrate-create` | Crear nueva migración Alembic |
+| `task migrate-upgrade` | Aplicar migraciones |
+| `task migrate-downgrade` | Revertir última migración |
