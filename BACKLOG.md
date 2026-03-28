@@ -5,7 +5,7 @@
 - [x] Modelo de Datos
 - [x] Timestamps: Agregar campo updated_at automático
 - [x] Gestión de Base de Datos (PostgreSQL + Alembic)
-- [ ] Seed Data: Script para insertar 10 leads de prueba
+- [x] Seed Data: Script para insertar 10 leads de prueba
 
 ## Fase 2: API REST & Validaciones
 - [x] POST /leads
