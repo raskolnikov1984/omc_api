@@ -75,3 +75,27 @@ Este proyecto usa [taskipy](https://taskipy.readthedocs.io/) para automatizar ta
 | `task migrate-create` | Crear nueva migración Alembic |
 | `task migrate-upgrade` | Aplicar migraciones |
 | `task migrate-downgrade` | Revertir última migración |
+
+## Acerca del Proyecto
+
+Este proyecto fue desarrollado aplicando **Spec Driven Development (SDD)** utilizando **OpenCode**, siguiendo las mejores prácticas de desarrollo moderno:
+
+- **Arquitectura**: Clean Architecture con separación de responsabilidades
+- **Stack**: Python 3.14, FastAPI, PostgreSQL 18, SQLAlchemy Async, Alembic
+- **Calidad**: Tests unitarios e integración, Linting con Ruff, Type hints
+- **Infraestructura**: Docker + Docker Compose con Nginx como reverse proxy
+
+### Proyectos de Referencia
+
+Esta implementación toma inspiración de experiencia previa en:
+
+- [Order Processing System](https://github.com/raskolnikov1984/order-processing-system/tree/main/order-service) - Arquitectura de microservicios con Python
+- [IAM Interview](https://github.com/raskolnikov1984/iam_interview) - Manejo de agentes, chatbots y LLM con modelos open source
+
+### Siguientes Pasos
+
+Para completar los requerimientos del desafío, se pueden implementar las siguientes funcionalidades tomando referencia del proyecto IAM Interview:
+
+- Integración con LLM para generar resúmenes de leads
+- Manejo de agentes para automatización
+- Chatbot para interacción con clientes
