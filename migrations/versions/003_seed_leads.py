@@ -23,99 +23,23 @@ def upgrade() -> None:
     count = result.scalar()
 
     if count == 0:
-        leads = [
-            {
-                "name": "Juan Pérez",
-                "email": "juan@example.com",
-                "phone": "+1234567890",
-                "source": "instagram",
-                "target_product": "Producto A",
-                "budget": 1000.0,
-            },
-            {
-                "name": "María García",
-                "email": "maria@example.com",
-                "phone": "+1234567891",
-                "source": "facebook",
-                "target_product": "Producto B",
-                "budget": 2000.0,
-            },
-            {
-                "name": "Carlos López",
-                "email": "carlos@example.com",
-                "phone": "+1234567892",
-                "source": "landing_page",
-                "target_product": "Producto C",
-                "budget": 1500.0,
-            },
-            {
-                "name": "Ana Martínez",
-                "email": "ana@example.com",
-                "phone": "+1234567893",
-                "source": "referido",
-                "target_product": "Producto A",
-                "budget": 800.0,
-            },
-            {
-                "name": "Pedro Sánchez",
-                "email": "pedro@example.com",
-                "phone": "+1234567894",
-                "source": "otro",
-                "target_product": "Producto D",
-                "budget": 2500.0,
-            },
-            {
-                "name": "Laura Rodríguez",
-                "email": "laura@example.com",
-                "phone": "+1234567895",
-                "source": "instagram",
-                "target_product": "Producto B",
-                "budget": 1800.0,
-            },
-            {
-                "name": "Miguel Torres",
-                "email": "miguel@example.com",
-                "phone": "+1234567896",
-                "source": "facebook",
-                "target_product": "Producto C",
-                "budget": 1200.0,
-            },
-            {
-                "name": "Sofia Hernández",
-                "email": "sofia@example.com",
-                "phone": "+1234567897",
-                "source": "landing_page",
-                "target_product": "Producto A",
-                "budget": 3000.0,
-            },
-            {
-                "name": "Diego Gómez",
-                "email": "diego@example.com",
-                "phone": "+1234567898",
-                "source": "referido",
-                "target_product": "Producto D",
-                "budget": 900.0,
-            },
-            {
-                "name": "Isabel Díaz",
-                "email": "isabel@example.com",
-                "phone": "+1234567899",
-                "source": "instagram",
-                "target_product": "Producto B",
-                "budget": 2200.0,
-            },
-        ]
-
-        for lead in leads:
-            op.execute(
-                sa.text(
-                    """
-                    INSERT INTO leads (name, email, phone, source, target_product, budget, created_at)
-                    VALUES (:name, :email, :phone, :source, :target_product, :budget, NOW())
+        op.execute(
+            sa.text(
                 """
-                ),
-                lead,
+                INSERT INTO leads (name, email, phone, source, target_product, budget, created_at) VALUES
+                ('Juan Pérez', 'juan@example.com', '+1234567890', 'instagram', 'Producto A', 1000.0, NOW()),
+                ('María García', 'maria@example.com', '+1234567891', 'facebook', 'Producto B', 2000.0, NOW()),
+                ('Carlos López', 'carlos@example.com', '+1234567892', 'landing_page', 'Producto C', 1500.0, NOW()),
+                ('Ana Martínez', 'ana@example.com', '+1234567893', 'referido', 'Producto A', 800.0, NOW()),
+                ('Pedro Sánchez', 'pedro@example.com', '+1234567894', 'otro', 'Producto D', 2500.0, NOW()),
+                ('Laura Rodríguez', 'laura@example.com', '+1234567895', 'instagram', 'Producto B', 1800.0, NOW()),
+                ('Miguel Torres', 'miguel@example.com', '+1234567896', 'facebook', 'Producto C', 1200.0, NOW()),
+                ('Sofia Hernández', 'sofia@example.com', '+1234567897', 'landing_page', 'Producto A', 3000.0, NOW()),
+                ('Diego Gómez', 'diego@example.com', '+1234567898', 'referido', 'Producto D', 900.0, NOW()),
+                ('Isabel Díaz', 'isabel@example.com', '+1234567899', 'instagram', 'Producto B', 2200.0, NOW())
+                """
             )
+        )
 
 
 def downgrade() -> None:
