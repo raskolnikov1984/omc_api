@@ -1,7 +1,7 @@
 [project]
 name = "app"
 version = "0.1.0"
-description = "Add your description here"
+description = "API for capture leads"
 authors = [
     {name = "aserrador",email = "alejandro.ayala0@gmail.com"}
 ]
