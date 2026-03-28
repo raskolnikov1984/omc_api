@@ -41,7 +41,7 @@ API para captura de leads.
 docker-compose up -d
 ```
 
-La API estará disponible en: `http://localhost:8010`
+La API estará disponible a través de Nginx en: `http://localhost:10000`
 
 ## Variables de Entorno
 
