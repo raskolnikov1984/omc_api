@@ -34,7 +34,7 @@ API para captura de leads.
 ## Deploy
 
 ```bash
-docker-compose up --build
+docker-compose up -d
 ```
 
 La API estará disponible en: `http://localhost:8010`
