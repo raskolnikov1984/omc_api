@@ -8,9 +8,9 @@ async def test_create_lead_with_successfuly(async_client: AsyncClient, lead: dic
 
     assert response.status_code == 201
     data = response.json()
-    
+
     assert "id" in data
-    assert data["id"] == 1 
+    assert data["id"] == 1
     assert "created_at" in data
 
 
@@ -94,5 +94,42 @@ async def test_get_lead_by_id(async_client: AsyncClient, lead: dict):
 @pytest.mark.anyio
 async def test_get_lead_by_id_not_found(async_client: AsyncClient):
     response = await async_client.get("/leads/999")
+
+    assert response.status_code == 404
+
+
+@pytest.mark.anyio
+async def test_update_lead(async_client: AsyncClient, lead: dict):
+    create_response = await async_client.post("/leads", json=lead)
+    lead_id = create_response.json()["id"]
+
+    update_data = {"name": "Updated Name", "budget": 5000}
+    response = await async_client.patch(f"/leads/{lead_id}", json=update_data)
+
+    assert response.status_code == 200
+    data = response.json()
+    assert data["name"] == "Updated Name"
+    assert data["budget"] == 5000
+    assert data["email"] == lead["email"]
+
+
+@pytest.mark.anyio
+async def test_update_lead_partial(async_client: AsyncClient, lead: dict):
+    create_response = await async_client.post("/leads", json=lead)
+    lead_id = create_response.json()["id"]
+
+    update_data = {"phone": "+123456789"}
+    response = await async_client.patch(f"/leads/{lead_id}", json=update_data)
+
+    assert response.status_code == 200
+    data = response.json()
+    assert data["phone"] == "+123456789"
+    assert data["name"] == lead["name"]
+
+
+@pytest.mark.anyio
+async def test_update_lead_not_found(async_client: AsyncClient):
+    update_data = {"name": "Test"}
+    response = await async_client.patch("/leads/999", json=update_data)
 
     assert response.status_code == 404
