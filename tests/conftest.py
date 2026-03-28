@@ -1,10 +1,12 @@
 import pytest
 from httpx import ASGITransport, AsyncClient
 from app.main import app
+from app.api.v1.endpoints.leads.leads import leads
 
 
 @pytest.fixture(scope="function")
 async def async_client():
+    leads.clear()
     async with AsyncClient(
         transport=ASGITransport(app=app), base_url="http://test/api/v1"
     ) as client:
