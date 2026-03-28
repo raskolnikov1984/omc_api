@@ -1,4 +1,14 @@
 services:
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8010:8010"
+    volumes:
+      - ./app:/app/app
+    env_file:
+      - .env
   db:
     image: postgres:18
     environment:
@@ -16,3 +26,4 @@ services:
 
 volumes:
   _data:
+  app:
