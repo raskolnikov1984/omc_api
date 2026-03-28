@@ -153,3 +153,35 @@ async def test_delete_lead_not_found(async_client: AsyncClient):
     response = await async_client.delete("/leads/999")
 
     assert response.status_code == 404
+
+
+@pytest.mark.anyio
+async def test_get_leads_stats(async_client: AsyncClient, lead: dict):
+    lead_facebook = {**lead, "source": "facebook", "budget": 1000}
+    lead_instagram = {
+        **lead,
+        "source": "instagram",
+        "email": "test2@example.com",
+        "budget": 2000,
+    }
+    lead_landing = {
+        **lead,
+        "source": "landing_page",
+        "email": "test3@example.com",
+        "budget": 1500,
+    }
+
+    await async_client.post("/leads", json=lead_facebook)
+    await async_client.post("/leads", json=lead_instagram)
+    await async_client.post("/leads", json=lead_landing)
+
+    response = await async_client.get("/leads/stats")
+
+    assert response.status_code == 200
+    data = response.json()
+    assert data["total_leads"] == 3
+    assert data["leads_by_source"]["facebook"] == 1
+    assert data["leads_by_source"]["instagram"] == 1
+    assert data["leads_by_source"]["landing_page"] == 1
+    assert data["average_budget"] == 1500.0
+    assert data["leads_last_7_days"] == 3

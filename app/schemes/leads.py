@@ -36,3 +36,10 @@ class LeadUpdateScheme(BaseModel):
     ) = None
     target_product: str | None = None
     budget: float | None = None
+
+
+class LeadStatsScheme(BaseModel):
+    total_leads: int
+    leads_by_source: dict[str, int]
+    average_budget: float | None
+    leads_last_7_days: int

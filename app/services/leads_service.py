@@ -1,7 +1,7 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 from typing import Optional
 
-from sqlalchemy import select
+from sqlalchemy import select, func
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.database.models import LeadSQL
@@ -80,3 +80,32 @@ class LeadService:
             await self.session.commit()
             return True
         return False
+
+    async def get_stats(self) -> dict:
+        # Total de leads
+        total_result = await self.session.execute(select(func.count(LeadSQL.id)))
+        total_leads = total_result.scalar() or 0
+
+        # Leads por fuente
+        source_result = await self.session.execute(
+            select(LeadSQL.source, func.count(LeadSQL.id)).group_by(LeadSQL.source)
+        )
+        leads_by_source = {row[0]: row[1] for row in source_result.all()}
+
+        # Promedio de presupuesto
+        avg_result = await self.session.execute(select(func.avg(LeadSQL.budget)))
+        average_budget = avg_result.scalar()
+
+        # Leads últimos 7 días
+        seven_days_ago = datetime.now() - timedelta(days=7)
+        last_7_days_result = await self.session.execute(
+            select(func.count(LeadSQL.id)).where(LeadSQL.created_at >= seven_days_ago)
+        )
+        leads_last_7_days = last_7_days_result.scalar() or 0
+
+        return {
+            "total_leads": total_leads,
+            "leads_by_source": leads_by_source,
+            "average_budget": average_budget,
+            "leads_last_7_days": leads_last_7_days,
+        }

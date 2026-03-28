@@ -4,7 +4,7 @@ from fastapi import APIRouter, Depends, HTTPException, Query, status
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.database import get_db
-from app.schemes.leads import LeadScheme, LeadUpdateScheme
+from app.schemes.leads import LeadScheme, LeadStatsScheme, LeadUpdateScheme
 from app.services.leads_service import LeadService
 
 router = APIRouter()
@@ -22,6 +22,16 @@ async def create_lead(
     created_lead = await service.create_lead(lead)
 
     return {"id": created_lead.id, "created_at": created_lead.created_at}
+
+
+@router.get("/leads/stats", response_model=LeadStatsScheme)
+async def get_leads_stats(db: AsyncSession = Depends(get_db)):
+    """
+    Get lead statistics
+    """
+    service = LeadService(db)
+    stats = await service.get_stats()
+    return stats
 
 
 @router.get("/leads/{lead_id}")
