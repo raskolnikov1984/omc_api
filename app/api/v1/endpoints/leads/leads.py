@@ -51,7 +51,9 @@ async def get_leads(
     filtered_leads = leads.copy()
 
     if source:
-        filtered_leads = [l for l in filtered_leads if l.get("source") == source]
+        filtered_leads = [
+            l for l in filtered_leads if l.get("source") == source
+        ]
 
     if start_date:
         filtered_leads = [
@@ -69,7 +71,8 @@ async def get_leads(
 
     reverse_order = order_dir == "desc"
     filtered_leads.sort(
-        key=lambda x: x.get("created_at") or datetime.min, reverse=reverse_order
+        key=lambda x: x.get(
+            "created_at") or datetime.min, reverse=reverse_order
     )
 
     total = len(filtered_leads)
