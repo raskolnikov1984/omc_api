@@ -9,9 +9,9 @@
 
 ## Fase 2: API REST & Validaciones
 - [x] POST /leads
-  - [ ] Validar email único
-  - [ ] Validar nombre (mínimo 2 caracteres)
-  - [ ] Validar fuente permitida
+  - [x] Validar email único
+  - [x] Validar nombre (mínimo 2 caracteres)
+  - [x] Validar fuente permitida
 - [x] GET /leads (paginación, filtros, ordenamiento)
 - [x] GET /leads/:id
 - [x] PATCH /leads/:id
