@@ -3,7 +3,7 @@
 ## Fase 1: Infraestructura y Persistencia
 - [x] Configuración del Entorno
 - [x] Modelo de Datos
-- [ ] Timestamps: Agregar campo updated_at automático
+- [x] Timestamps: Agregar campo updated_at automático
 - [x] Gestión de Base de Datos (PostgreSQL + Alembic)
 - [ ] Seed Data: Script para insertar 10 leads de prueba
 
