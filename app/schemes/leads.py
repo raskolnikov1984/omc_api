@@ -1,3 +1,4 @@
+from datetime import datetime
 from typing import Literal
 
 from pydantic import BaseModel, EmailStr
@@ -16,3 +17,4 @@ class LeadScheme(BaseModel):
     ]
     target_product: str | None = None
     budget: float | None = None
+    created_at: datetime | None = None
