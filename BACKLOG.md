@@ -27,7 +27,7 @@
 - [x] README.md
 - [x] .env.example
 - [ ] Manejo de Errores estandarizado
-- [ ] Swagger
+- [x] Swagger
 
 ## Fase 5: Bonus
 - [x] Dockerización
