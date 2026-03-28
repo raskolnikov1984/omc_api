@@ -3,10 +3,15 @@ from httpx import AsyncClient
 
 
 @pytest.mark.anyio
-async def test_create_lead_with_successfulyy(async_client: AsyncClient, lead: dict):
+async def test_create_lead_with_successfuly(async_client: AsyncClient, lead: dict):
     response = await async_client.post("/leads", json=lead)
 
     assert response.status_code == 201
+    data = response.json()
+    
+    assert "id" in data
+    assert data["id"] == 1 
+    assert "created_at" in data
 
 
 @pytest.mark.anyio

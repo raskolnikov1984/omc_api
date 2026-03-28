@@ -1,39 +1,56 @@
 from datetime import date, datetime
+from typing import Optional
 
-from fastapi import APIRouter, HTTPException, Query, status
+from fastapi import APIRouter, Depends, HTTPException, Query, status
+from sqlalchemy.ext.asyncio import AsyncSession
+
+from app.database import get_db
 from app.schemes.leads import LeadScheme
-
+from app.services.leads_service import LeadService
 
 router = APIRouter()
 
-leads = []
-
 
 @router.post("/leads", status_code=status.HTTP_201_CREATED)
-async def create_lead(lead: LeadScheme):
+async def create_lead(
+    lead: LeadScheme,
+    db: AsyncSession = Depends(get_db),
+):
     """
     Create a new lead
     """
-    lead_dict = lead.model_dump()
-    lead_dict["created_at"] = datetime.now()
-    lead_id = len(leads) + 1
-    lead_dict["id"] = lead_id
-    leads.append(lead_dict)
+    service = LeadService(db)
+    created_lead = await service.create_lead(lead)
 
-    return {"id": lead_id, "message": "successful"}
+    return {"id": created_lead.id, "created_at": created_lead.created_at}
 
 
 @router.get("/leads/{lead_id}")
-async def get_lead(lead_id: int):
+async def get_lead(
+    lead_id: int,
+    db: AsyncSession = Depends(get_db),
+):
     """
     Get a lead by ID
     """
-    if lead_id < 1 or lead_id > len(leads):
+    service = LeadService(db)
+    lead = await service.get_lead_by_id(lead_id)
+
+    if not lead:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail="Lead not found"
         )
 
-    return leads[lead_id - 1]
+    return {
+        "id": lead.id,
+        "name": lead.name,
+        "email": lead.email,
+        "phone": lead.phone,
+        "source": lead.source,
+        "target_product": lead.target_product,
+        "budget": lead.budget,
+        "created_at": lead.created_at,
+    }
 
 
 @router.get("/leads")
@@ -44,45 +61,45 @@ async def get_leads(
     start_date: date | None = Query(None),
     end_date: date | None = Query(None),
     order_dir: str = Query("desc", pattern="^(asc|desc)$"),
+    db: AsyncSession = Depends(get_db),
 ):
     """
     Get all leads with pagination, filtering and ordering
     """
-    filtered_leads = leads.copy()
+    service = LeadService(db)
 
-    if source:
-        filtered_leads = [
-            l for l in filtered_leads if l.get("source") == source
-        ]
+    start_datetime = (
+        datetime.combine(start_date, datetime.min.time()) if start_date else None
+    )
+    end_datetime = datetime.combine(end_date, datetime.max.time()) if end_date else None
 
-    if start_date:
-        filtered_leads = [
-            l
-            for l in filtered_leads
-            if l.get("created_at") and l["created_at"].date() >= start_date
-        ]
-
-    if end_date:
-        filtered_leads = [
-            l
-            for l in filtered_leads
-            if l.get("created_at") and l["created_at"].date() <= end_date
-        ]
-
-    reverse_order = order_dir == "desc"
-    filtered_leads.sort(
-        key=lambda x: x.get(
-            "created_at") or datetime.min, reverse=reverse_order
+    leads = await service.get_leads(
+        source=source,
+        start_date=start_datetime,
+        end_date=end_datetime,
+        order_desc=order_dir == "desc",
     )
 
-    total = len(filtered_leads)
+    total = len(leads)
     total_pages = (total + limit - 1) // limit
     start = (page - 1) * limit
     end = start + limit
-    items = filtered_leads[start:end]
+    items = leads[start:end]
 
     return {
-        "items": items,
+        "items": [
+            {
+                "id": lead.id,
+                "name": lead.name,
+                "email": lead.email,
+                "phone": lead.phone,
+                "source": lead.source,
+                "target_product": lead.target_product,
+                "budget": lead.budget,
+                "created_at": lead.created_at,
+            }
+            for lead in items
+        ],
         "page": page,
         "limit": limit,
         "total": total,
