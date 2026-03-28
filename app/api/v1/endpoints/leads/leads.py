@@ -4,7 +4,7 @@ from fastapi import APIRouter, Depends, HTTPException, Query, status
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.database import get_db
-from app.schemes.leads import LeadScheme
+from app.schemes.leads import LeadScheme, LeadUpdateScheme
 from app.services.leads_service import LeadService
 
 router = APIRouter()
@@ -40,15 +40,44 @@ async def get_lead(
             status_code=status.HTTP_404_NOT_FOUND, detail="Lead not found"
         )
 
+        return {
+            "id": lead.id,
+            "name": lead.name,
+            "email": lead.email,
+            "phone": lead.phone,
+            "source": lead.source,
+            "target_product": lead.target_product,
+            "budget": lead.budget,
+            "created_at": lead.created_at,
+        }
+
+
+@router.patch("/leads/{lead_id}")
+async def update_lead(
+    lead_id: int,
+    lead: LeadUpdateScheme,
+    db: AsyncSession = Depends(get_db),
+):
+    """
+    Update an existing lead
+    """
+    service = LeadService(db)
+    updated_lead = await service.update_lead(lead_id, lead)
+
+    if not updated_lead:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail="Lead not found"
+        )
+
     return {
-        "id": lead.id,
-        "name": lead.name,
-        "email": lead.email,
-        "phone": lead.phone,
-        "source": lead.source,
-        "target_product": lead.target_product,
-        "budget": lead.budget,
-        "created_at": lead.created_at,
+        "id": updated_lead.id,
+        "name": updated_lead.name,
+        "email": updated_lead.email,
+        "phone": updated_lead.phone,
+        "source": updated_lead.source,
+        "target_product": updated_lead.target_product,
+        "budget": updated_lead.budget,
+        "created_at": updated_lead.created_at,
     }
 
 

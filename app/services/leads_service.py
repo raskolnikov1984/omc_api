@@ -5,7 +5,7 @@ from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.database.models import LeadSQL
-from app.schemes.leads import LeadScheme
+from app.schemes.leads import LeadScheme, LeadUpdateScheme
 
 
 class LeadService:
@@ -57,6 +57,21 @@ class LeadService:
 
         result = await self.session.execute(query)
         return list(result.scalars().all())
+
+    async def update_lead(
+        self, lead_id: int, data: LeadUpdateScheme
+    ) -> Optional[LeadSQL]:
+        lead = await self.get_lead_by_id(lead_id)
+        if not lead:
+            return None
+
+        update_data = data.model_dump(exclude_unset=True)
+        for field, value in update_data.items():
+            setattr(lead, field, value)
+
+        await self.session.commit()
+        await self.session.refresh(lead)
+        return lead
 
     async def delete_lead(self, lead_id: int) -> bool:
         lead = await self.get_lead_by_id(lead_id)
