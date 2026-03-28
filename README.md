@@ -18,6 +18,8 @@ API para captura de leads.
 | `GET` | `/api/v1/` | Root - Mensaje de bienvenida |
 | `POST` | `/api/v1/leads` | Crear nuevo lead |
 | `GET` | `/api/v1/leads/{id}` | Obtener lead por ID |
+| `PATCH` | `/api/v1/leads/{id}` | Actualizar lead existente |
+| `DELETE` | `/api/v1/leads/{id}` | Eliminar lead |
 | `GET` | `/api/v1/leads` | Listar leads con paginación |
 
 ### Parámetros de Query (GET /api/v1/leads)
