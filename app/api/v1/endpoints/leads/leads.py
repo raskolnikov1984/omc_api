@@ -40,16 +40,16 @@ async def get_lead(
             status_code=status.HTTP_404_NOT_FOUND, detail="Lead not found"
         )
 
-        return {
-            "id": lead.id,
-            "name": lead.name,
-            "email": lead.email,
-            "phone": lead.phone,
-            "source": lead.source,
-            "target_product": lead.target_product,
-            "budget": lead.budget,
-            "created_at": lead.created_at,
-        }
+    return {
+        "id": lead.id,
+        "name": lead.name,
+        "email": lead.email,
+        "phone": lead.phone,
+        "source": lead.source,
+        "target_product": lead.target_product,
+        "budget": lead.budget,
+        "created_at": lead.created_at,
+    }
 
 
 @router.patch("/leads/{lead_id}")
