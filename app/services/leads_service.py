@@ -13,6 +13,10 @@ class LeadService:
         self.session = session
 
     async def create_lead(self, data: LeadScheme) -> LeadSQL:
+        existing = await self.get_lead_by_email(data.email)
+        if existing:
+            raise ValueError("Email already exists")
+
         lead = LeadSQL(
             name=data.name,
             email=data.email,
@@ -30,6 +34,12 @@ class LeadService:
     async def get_lead_by_id(self, lead_id: int) -> Optional[LeadSQL]:
         result = await self.session.execute(
             select(LeadSQL).where(LeadSQL.id == lead_id)
+        )
+        return result.scalar_one_or_none()
+
+    async def get_lead_by_email(self, email: str) -> Optional[LeadSQL]:
+        result = await self.session.execute(
+            select(LeadSQL).where(LeadSQL.email == email)
         )
         return result.scalar_one_or_none()
 

@@ -19,7 +19,10 @@ async def create_lead(
     Create a new lead
     """
     service = LeadService(db)
-    created_lead = await service.create_lead(lead)
+    try:
+        created_lead = await service.create_lead(lead)
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
 
     return {"id": created_lead.id, "created_at": created_lead.created_at}
 

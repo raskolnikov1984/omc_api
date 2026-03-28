@@ -16,8 +16,9 @@ async def test_create_lead_with_successfuly(async_client: AsyncClient, lead: dic
 
 @pytest.mark.anyio
 async def test_get_leads_paginated(async_client: AsyncClient, lead: dict):
-    for _ in range(15):
-        await async_client.post("/leads", json=lead)
+    for i in range(15):
+        lead_with_unique_email = {**lead, "email": f"test{i}@example.com"}
+        await async_client.post("/leads", json=lead_with_unique_email)
 
     response = await async_client.get("/leads?page=1&limit=10")
 
@@ -202,3 +203,31 @@ async def test_get_leads_stats(async_client: AsyncClient, lead: dict):
     assert data["leads_by_source"]["landing_page"] == 1
     assert data["average_budget"] == 1500.0
     assert data["leads_last_7_days"] == 3
+
+
+@pytest.mark.anyio
+async def test_create_lead_duplicate_email(async_client: AsyncClient, lead: dict):
+    await async_client.post("/leads", json=lead)
+
+    response = await async_client.post("/leads", json=lead)
+
+    assert response.status_code == 400
+    assert "Email already exists" in response.json()["detail"]
+
+
+@pytest.mark.anyio
+async def test_create_lead_short_name(async_client: AsyncClient, lead: dict):
+    lead_short_name = {**lead, "name": "A"}
+
+    response = await async_client.post("/leads", json=lead_short_name)
+
+    assert response.status_code == 422
+
+
+@pytest.mark.anyio
+async def test_create_lead_invalid_source(async_client: AsyncClient, lead: dict):
+    lead_invalid_source = {**lead, "source": "invalid_source"}
+
+    response = await async_client.post("/leads", json=lead_invalid_source)
+
+    assert response.status_code == 422

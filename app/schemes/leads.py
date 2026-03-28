@@ -1,11 +1,11 @@
 from datetime import datetime
 from typing import Literal
 
-from pydantic import BaseModel, EmailStr
+from pydantic import BaseModel, EmailStr, Field
 
 
 class LeadScheme(BaseModel):
-    name: str
+    name: str = Field(..., min_length=2)
     email: EmailStr
     phone: str | None = None
     source: Literal[
