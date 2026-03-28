@@ -133,3 +133,20 @@ async def get_leads(
         "total": total,
         "total_pages": total_pages,
     }
+
+
+@router.delete("/leads/{lead_id}", status_code=status.HTTP_204_NO_CONTENT)
+async def delete_lead(
+    lead_id: int,
+    db: AsyncSession = Depends(get_db),
+):
+    """
+    Delete a lead by ID
+    """
+    service = LeadService(db)
+    deleted = await service.delete_lead(lead_id)
+
+    if not deleted:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail="Lead not found"
+        )

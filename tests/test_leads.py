@@ -133,3 +133,23 @@ async def test_update_lead_not_found(async_client: AsyncClient):
     response = await async_client.patch("/leads/999", json=update_data)
 
     assert response.status_code == 404
+
+
+@pytest.mark.anyio
+async def test_delete_lead_success(async_client: AsyncClient, lead: dict):
+    create_response = await async_client.post("/leads", json=lead)
+    lead_id = create_response.json()["id"]
+
+    response = await async_client.delete(f"/leads/{lead_id}")
+
+    assert response.status_code == 204
+
+    get_response = await async_client.get(f"/leads/{lead_id}")
+    assert get_response.status_code == 404
+
+
+@pytest.mark.anyio
+async def test_delete_lead_not_found(async_client: AsyncClient):
+    response = await async_client.delete("/leads/999")
+
+    assert response.status_code == 404
