@@ -69,6 +69,7 @@ class LeadService:
         for field, value in update_data.items():
             setattr(lead, field, value)
 
+        lead.updated_at = datetime.now()
         await self.session.commit()
         await self.session.refresh(lead)
         return lead

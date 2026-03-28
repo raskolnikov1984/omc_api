@@ -136,6 +136,23 @@ async def test_update_lead_not_found(async_client: AsyncClient):
 
 
 @pytest.mark.anyio
+async def test_update_lead_updates_timestamp(async_client: AsyncClient, lead: dict):
+    import time
+
+    create_response = await async_client.post("/leads", json=lead)
+    lead_id = create_response.json()["id"]
+
+    time.sleep(0.1)
+
+    update_data = {"name": "Updated Name"}
+    response = await async_client.patch(f"/leads/{lead_id}", json=update_data)
+
+    assert response.status_code == 200
+    data = response.json()
+    assert data["updated_at"] is not None
+
+
+@pytest.mark.anyio
 async def test_delete_lead_success(async_client: AsyncClient, lead: dict):
     create_response = await async_client.post("/leads", json=lead)
     lead_id = create_response.json()["id"]

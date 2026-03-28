@@ -88,6 +88,7 @@ async def update_lead(
         "target_product": updated_lead.target_product,
         "budget": updated_lead.budget,
         "created_at": updated_lead.created_at,
+        "updated_at": updated_lead.updated_at,
     }
 
 
