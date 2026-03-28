@@ -6,7 +6,7 @@ from .settings import settings
 
 DATABASE_URL = (
     f"postgresql+asyncpg://{settings.POSTGRES_USER}:"
-    f"{settings.POSTGRES_PASSWORD}@order-db:5432/{settings.DATABASE}"
+    f"{settings.POSTGRES_PASSWORD}@{settings.POSTGRES_HOST}:5432/{settings.DATABASE}"
 )
 
 engine = create_async_engine(DATABASE_URL, echo=True)

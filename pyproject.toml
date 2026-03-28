@@ -10,10 +10,12 @@ requires-python = ">=3.14,<4.0"
 dependencies = [
     "aio-pika>=9.6.2",
     "aiosqlite>=0.22.1",
+    "alembic>=1.18.4",
     "asyncpg>=0.31.0",
     "fastapi[standard]>=0.135.2",
-    "psycopg-binary>=3.3.3",
+    "psycopg2-binary>=2.9.11",
     "sqlalchemy>=2.0.48",
+    "uvicorn (>=0.42.0,<0.43.0)",
 ]
 
 [dependency-groups]

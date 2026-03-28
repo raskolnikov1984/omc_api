@@ -1,5 +1,8 @@
 FROM python:3.14-trixie
 
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    libpq-dev \
+    && rm -rf /var/lib/apt/lists/*
 
 ENV PYTHONUNBUFFERED=1 \
     PYTHONDONTWRITEBYTECODE=1 \
@@ -9,12 +12,18 @@ WORKDIR /app
 
 RUN pip install --no-cache-dir uv
 
-COPY pyproject.toml uv.lock ./
+COPY pyproject.toml ./
 COPY app/ ./app/
+COPY migrations/ ./migrations/
+COPY alembic.ini ./
+COPY entrypoint.sh ./
 
-RUN uv sync --frozen
-RUN uv pip install --editable .
+RUN uv sync --python-preference system
+# RUN uv pip install --system psycopg2-binary alembic asyncpg
+RUN uv pip install --system --editable .
+
+RUN chmod +x entrypoint.sh
 
 EXPOSE 8010
 
-CMD ["uv", "run", "uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8010", "--reload"]
+ENTRYPOINT ["./entrypoint.sh"]
